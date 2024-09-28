@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const connection = require('./connection')
-
+const userRoutes = require('./routes/User')
 const app = express();
 const port = 3000;
 
@@ -11,6 +11,8 @@ app.use(bodyParser.json());
 app.use(cors({
     origin: '*'
 }));
+
+app.use('/users', userRoutes);
 
 // Default route to check the server
 app.get("/", async (req, res) => {
@@ -22,34 +24,45 @@ app.get("/", async (req, res) => {
 })
 
 //get all the users
-app.get('/getuser', async (req, res) => {
-    try {
+// app.get('/getuser', async (req, res) => {
+//     try {
 
-        const querySql = 'SELECT * FROM student';
-        const rows = await connection({ querys: querySql, values: [] });
-        res.send({ message: "Successfuly fetched!", rows });
-    }
-    catch (error) {
+//         const querySql = 'SELECT * FROM student';
+//         const rows = await connection({ querys: querySql, values: [] });
+//         res.send({ message: "Successfuly fetched!", rows });
+//     }
+//     catch (error) {
 
-    }
-})
+//     }
+// })
+//get user by perticular id
+// app.get('/getuser/:id', async (req, res) => {
+//     try {
+//         const { id } = req.params;
+//         const querySql = `SELECT * FROM student WHERE id='${id}'`;
+//         const rows = await connection({ querys: querySql, valaues: [] });
+//         res.send({ message: 'Successfully Featched single data!', rows });
+//     } catch (error) {
+//         res.send(error);
+//     }
+// })
 
 //add data or user to perticular db table
-app.post('/createuser', async (req, res) => {
-    try {
-        const data = req.body;
-        const querySql = `INSERT INTO student 
-        (id,name,mobile,department,u_id,city) 
-        VALUES ('${data.id}','${data.name}','${data.mobile}','${data.department}','${data.u_id}','${data.city}')`;
-        const rows = await connection({ querys: querySql, values: [] });
-        res.send({ message: "Successfully created new user!", rows, createdUser: data });
+// app.post('/createuser', async (req, res) => {
+//     try {
+//         const data = req.body;
+//         const querySql = `INSERT INTO student 
+//         (id,name,mobile,department,u_id,city) 
+//         VALUES ('${data.id}','${data.name}','${data.mobile}','${data.department}','${data.u_id}','${data.city}')`;
+//         const rows = await connection({ querys: querySql, values: [] });
+//         res.send({ message: "Successfully created new user!", rows, createdUser: data });
 
-        // console.log('Created User Data:', data); //to display data on console
-        // res.send({ message: "Successfully created new user!", rows, createdUser: data });
-    } catch (error) {
-        res.send({ error })
-    }
-})
+//         // console.log('Created User Data:', data); //to display data on console
+//         // res.send({ message: "Successfully created new user!", rows, createdUser: data });
+//     } catch (error) {
+//         res.send({ error })
+//     }
+// })
 
 //Update data of a perticular id
 app.patch('/updateuser/:id', async (req, res) => {
